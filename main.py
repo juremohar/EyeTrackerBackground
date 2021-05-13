@@ -23,14 +23,6 @@ class WorkerThread(QThread):
             self.file_save.addToDataCollection(data)
             time.sleep(0.1)
 
-        # for x in range(1, 100):
-        #     # print(x)
-        #     time.sleep(0.1)
-        #     # data = self.tracker.get_avg_pos()
-        #     data = self.tracker.get_data()
-        #     self.file_save.addToDataCollection(data)
-            # self.updateProgress.emit(x)
-
     def stop(self):
         print("worker stop")
 
@@ -74,9 +66,6 @@ class WindowsTrayUi(QMainWindow):
         self.worker.start()
 
     def stop_tracking(self):
-
-        file_saver = FileSave()
-
         print("stop tracking")
         self.worker.stop()
 
