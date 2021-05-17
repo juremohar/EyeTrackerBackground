@@ -1,3 +1,5 @@
+import os
+import sys
 from PyQt5.QtCore import QThread, pyqtSignal
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
@@ -7,6 +9,18 @@ from EyeTrackerService import EyeTracker
 from FileSave import FileSave
 
 print("start of program")
+
+
+def resource_path(relative_path):
+    """ Get absolute path to resource, works for dev and for PyInstaller """
+    try:
+        # PyInstaller creates a temp folder and stores path in _MEIPASS
+        base_path = sys._MEIPASS
+    except Exception:
+        base_path = os.path.abspath(".")
+
+    return os.path.join(base_path, relative_path)
+
 
 
 class WorkerThread(QThread):
@@ -34,7 +48,7 @@ class WorkerThread(QThread):
 class WindowsTrayUi(QMainWindow):
     def __init__(self, parent=None):
         super(WindowsTrayUi, self).__init__(parent)
-        self.icon = QIcon("icon.png")
+        self.icon = QIcon(resource_path("icon.png"))
 
         # Adding item on the menu bar
         self.tray = QSystemTrayIcon()

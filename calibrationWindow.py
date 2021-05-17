@@ -20,8 +20,6 @@ class WorkerThread(QThread):
         self.calibration.enter_calibration_mode()
 
         while True:
-            data = self.tracker.get_data()
-            # print(data)
             time.sleep(0.1)
 
     def stop(self):
@@ -45,8 +43,6 @@ class UICalibrate(QWidget):
     #                        (0.9, 0.5), (0.9, 0.9)]
     points_to_calibrate = [(0.1, 0.1), (0.1, 0.9), (0.5, 0.5), (0.9, 0.1), (0.9, 0.9)]
     currentPoint = None
-
-    # calibration = None
 
     def __init__(self, parent=None):
         super(UICalibrate, self).__init__(parent)
@@ -94,8 +90,6 @@ class UICalibrate(QWidget):
 class MainWindow(QMainWindow):
     def __init__(self, parent=None):
         super(MainWindow, self).__init__(parent)
-        # self.setFixedSize(widthScreen, heightScreen)
-        # self.showMaximized()
         self.showFullScreen()
         self.startUICalibration()
 
@@ -103,7 +97,6 @@ class MainWindow(QMainWindow):
         self.Calibrate = UICalibrate(self)
         self.setWindowTitle("Calibrate")
         self.setCentralWidget(self.Calibrate)
-        # self.Calibrate.backBtn.clicked.connect(self.startUIMenu)
 
         self.show()
 
