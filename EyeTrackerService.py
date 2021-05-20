@@ -25,7 +25,7 @@ class EyeTracker:
     def start_tracking(self):
         if not self.tracker:
             print("error starting tracking - no device found")
-            return
+            raise Exception("No eyetracker device found")
 
         self.tracker.subscribe_to(tr.EYETRACKER_GAZE_DATA, self.gaze_data_callback, as_dictionary=True)
 
@@ -34,7 +34,7 @@ class EyeTracker:
     def stop_tracking(self):
         if not self.tracker:
             print("error stopping tracking - no device found")
-            return
+            raise Exception("No eyetracker device found")
 
         self.tracker.unsubscribe_from(tr.EYETRACKER_GAZE_DATA, self.gaze_data_callback)
 
@@ -44,7 +44,7 @@ class EyeTracker:
     def get_avg_pos(self):
         # check to see if the eyetracker is connected and turned on
         if self.tracker is None:
-            raise ValueError("There is no eyetracker.")
+            raise Exception("No eyetracker device found")
 
         # access gaze data dictionary to get eye position tuples, given in
         lOriginXYZ = self.gazeData['left_gaze_point_on_display_area']

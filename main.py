@@ -1,12 +1,15 @@
 import os
 import sys
-from PyQt5.QtCore import QThread, pyqtSignal
+from PyQt5.QtCore import QThread
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 import time
 
 from EyeTrackerService import EyeTracker
 from FileSave import FileSave
+
+from RpycServer import RpycServer
+from rpyc.utils.server import ThreadedServer
 
 print("start of program")
 
@@ -24,8 +27,6 @@ def resource_path(relative_path):
 
 
 class WorkerThread(QThread):
-    updateProgress = pyqtSignal(int)
-
     def run(self):
         self.tracker = EyeTracker()
         self.tracker.start_tracking()
@@ -43,7 +44,6 @@ class WorkerThread(QThread):
         self.file_save.saveDataToFile(time.strftime('%d_%m_%Y_%H_%M_%S'))
         self.tracker.stop_tracking()
         self.terminate()
-
 
 class WindowsTrayUi(QMainWindow):
     def __init__(self, parent=None):
@@ -63,7 +63,7 @@ class WindowsTrayUi(QMainWindow):
         self.option_stop_tracking.triggered.connect(self.stop_tracking)
 
         self.option_quit = QAction("Quit")
-        self.option_quit.triggered.connect(app.quit)
+        self.option_quit.triggered.connect(self.applicationQuit)
 
         self.menu.addAction(self.option_start_tracking)
         self.menu.addAction(self.option_stop_tracking)
@@ -83,9 +83,16 @@ class WindowsTrayUi(QMainWindow):
         print("stop tracking")
         self.worker.stop()
 
+    def applicationQuit(self):
+        t.close()
+        app.quit()
 
 if __name__ == '__main__':
     app = QApplication([])
     app.setQuitOnLastWindowClosed(False)
     tray = WindowsTrayUi()
+
+    t = ThreadedServer(RpycServer(tray), port=33333)
+    t.start()
+
     app.exec_()
