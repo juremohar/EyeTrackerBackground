@@ -25,7 +25,6 @@ def resource_path(relative_path):
     return os.path.join(base_path, relative_path)
 
 
-
 class WorkerThread(QThread):
     def run(self):
         self.tracker = EyeTracker()
@@ -38,12 +37,25 @@ class WorkerThread(QThread):
             self.file_save.addToDataCollection(data)
             time.sleep(0.1)
 
-    def stop(self):
+    def stop(self, location):
         print("worker stop")
 
-        self.file_save.saveDataToFile(time.strftime('%d_%m_%Y_%H_%M_%S'))
+        if location is None:
+            location = time.strftime('%d_%m_%Y_%H_%M_%S') + ".json"
+
+        self.file_save.saveDataToFile(location)
         self.tracker.stop_tracking()
         self.terminate()
+
+
+class RpycServerWorker(QThread):
+    def run(self):
+        t = ThreadedServer(RpycServer(tray), port=33333)
+        t.start()
+
+    def stop(self):
+        self.terminate()
+
 
 class WindowsTrayUi(QMainWindow):
     def __init__(self, parent=None):
@@ -79,20 +91,25 @@ class WindowsTrayUi(QMainWindow):
         print("start tracking")
         self.worker.start()
 
-    def stop_tracking(self):
+    def stop_tracking(self, location=None):
         print("stop tracking")
-        self.worker.stop()
+        self.worker.stop(location)
 
     def applicationQuit(self):
-        t.close()
+        rpyc_worker.stop()
+        # t.close()
         app.quit()
+
 
 if __name__ == '__main__':
     app = QApplication([])
     app.setQuitOnLastWindowClosed(False)
     tray = WindowsTrayUi()
 
-    t = ThreadedServer(RpycServer(tray), port=33333)
-    t.start()
+    rpyc_worker = RpycServerWorker()
+    rpyc_worker.start()
+
+    # t = ThreadedServer(RpycServer(tray), port=33333)
+    # t.start()
 
     app.exec_()

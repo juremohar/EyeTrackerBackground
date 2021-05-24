@@ -17,10 +17,12 @@ class FileSave:
     def addToDataCollection(self, data):
         self.data_collection.append(data)
 
-    def saveDataToFile(self, file_name):
-        path = os.path.join(self.folder_path, file_name + ".json")
+    def saveDataToFile(self, location=None):
 
-        with open(path, 'w') as fp:
+        if not location:
+            location = os.path.join(self.folder_path, time.strftime('%d_%m_%Y_%H_%M_%S') + ".json")
+
+        with open(location, 'w') as fp:
             json.dump(self.data_collection, fp)
 
         print("saved - " + str(len(self.data_collection)))

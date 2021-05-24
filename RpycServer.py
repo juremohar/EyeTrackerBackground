@@ -23,9 +23,9 @@ class RpycServer(rpyc.Service):
             "msg": "eye tracker was successfully started"
         }
 
-    def exposed_turn_off_eyetracker_capture(self):
+    def exposed_turn_off_eyetracker_capture(self, location):
         try:
-            self.tray.stop_tracking()
+            self.tray.stop_tracking(location)
             print("eye tracker STOPPED with rypc client call")
         except Exception as err:
             print("there was an error attempting to turn OFF eye tracker")
