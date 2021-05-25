@@ -72,7 +72,7 @@ class UICalibrate(QWidget):
 
         self.saveApplyBtn = QPushButton('Save & Apply', self)
         self.saveApplyBtn.move(int(widthScreen * 0.6), int(heightScreen * 0.9))
-        self.saveApplyBtn.clicked.connect(self.applySaveCalibration)
+        self.saveApplyBtn.clicked.connect(self.leaveCalibrationMode)
         self.saveApplyBtn.hide()
 
         self.worker = WorkerThread()
@@ -92,16 +92,16 @@ class UICalibrate(QWidget):
 
         if self.currentIndex >= len(self.points_to_calibrate):
             self.timer.stop()
-
-            self.dots_on_screen = []
-            for dot in self.points_to_calibrate:
-                newDot = UICalibrationCircle(self)
-                newDot.move(int(widthScreen * dot[0]), int(heightScreen * dot[1]))
-                newDot.show()
-                self.dots_on_screen.append(newDot)
-
-                self.discardBtn.show()
-                self.saveApplyBtn.show()
+            self.applySaveCalibration()
+            # self.dots_on_screen = []
+            # for dot in self.points_to_calibrate:
+            #     newDot = UICalibrationCircle(self)
+            #     newDot.move(int(widthScreen * dot[0]), int(heightScreen * dot[1]))
+            #     newDot.show()
+            #     self.dots_on_screen.append(newDot)
+            #     self.applySaveCalibration()
+                # self.discardBtn.show()
+                # self.saveApplyBtn.show()
             return
 
         correctPoint = self.points_to_calibrate[self.currentIndex]
@@ -115,6 +115,17 @@ class UICalibrate(QWidget):
         w.startStartingMenu()
 
     def applySaveCalibration(self):
+
+        self.dots_on_screen = []
+        for dot in self.points_to_calibrate:
+            newDot = UICalibrationCircle(self)
+            newDot.move(int(widthScreen * dot[0]), int(heightScreen * dot[1]))
+            newDot.show()
+            self.dots_on_screen.append(newDot)
+
+        self.discardBtn.show()
+        self.saveApplyBtn.show()
+
         calibration_result = self.worker.calibration.compute_and_apply()
 
         print("Compute and apply returned {0} and collected at {1} points.".format(calibration_result.status, len(
@@ -143,10 +154,14 @@ class UICalibrate(QWidget):
             self.eye_position_on_screen.append(left_eye_circle)
             self.eye_position_on_screen.append(right_eye_circle)
 
-        self.worker.calibration.leave_calibration_mode()
-        self.worker.stop()
+        # self.worker.calibration.leave_calibration_mode()
+        # self.worker.stop()
         # w.startStartingMenu()
 
+    def leaveCalibrationMode(self):
+        self.worker.calibration.leave_calibration_mode()
+        self.worker.stop()
+        w.startStartingMenu()
 
 class UIStartingMenu(QWidget):
     def __init__(self, parent=None):

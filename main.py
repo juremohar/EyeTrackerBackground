@@ -75,7 +75,7 @@ class WindowsTrayUi(QMainWindow):
         self.option_stop_tracking.triggered.connect(self.stop_tracking)
 
         self.option_quit = QAction("Quit")
-        self.option_quit.triggered.connect(self.applicationQuit)
+        self.option_quit.triggered.connect(self.application_quit)
 
         self.menu.addAction(self.option_start_tracking)
         self.menu.addAction(self.option_stop_tracking)
@@ -95,9 +95,8 @@ class WindowsTrayUi(QMainWindow):
         print("stop tracking")
         self.worker.stop(location)
 
-    def applicationQuit(self):
+    def application_quit(self):
         rpyc_worker.stop()
-        # t.close()
         app.quit()
 
 
@@ -108,8 +107,5 @@ if __name__ == '__main__':
 
     rpyc_worker = RpycServerWorker()
     rpyc_worker.start()
-
-    # t = ThreadedServer(RpycServer(tray), port=33333)
-    # t.start()
 
     app.exec_()
