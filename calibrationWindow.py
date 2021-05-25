@@ -33,8 +33,8 @@ class UICalibrationCircle(QWidget):
         super(UICalibrationCircle, self).__init__(parent)
 
         self.circle = QLabel(self)
-        self.circle.resize(30, 30)
-        self.circle.setStyleSheet("border: 3px solid blue; border-radius: 40px;")
+        self.circle.resize(20, 20)
+        self.circle.setStyleSheet("border: 3px solid blue; border-radius: 10px;")
 
 
 class UIEyeLocationCircle(QWidget):
