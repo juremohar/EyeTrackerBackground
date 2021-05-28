@@ -86,15 +86,6 @@ class UICalibrate(QWidget):
         if self.currentIndex >= len(self.points_to_calibrate):
             self.timer.stop()
             self.applySaveCalibration()
-            # self.dots_on_screen = []
-            # for dot in self.points_to_calibrate:
-            #     newDot = UICircle(self)
-            #     newDot.move(int(widthScreen * dot[0]), int(heightScreen * dot[1]))
-            #     newDot.show()
-            #     self.dots_on_screen.append(newDot)
-            #     self.applySaveCalibration()
-            # self.discardBtn.show()
-            # self.saveApplyBtn.show()
             return
 
         correctPoint = self.points_to_calibrate[self.currentIndex]
