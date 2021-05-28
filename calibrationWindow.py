@@ -5,6 +5,8 @@ from PyQt5.QtWidgets import *
 
 from EyeTrackerService import *
 
+from UICircle import *
+
 widthScreen = 1920
 heightScreen = 1080
 
@@ -26,15 +28,6 @@ class WorkerThread(QThread):
         print("worker stop")
         self.tracker.stop_tracking()
         self.terminate()
-
-
-class UICalibrationCircle(QWidget):
-    def __init__(self, parent=None):
-        super(UICalibrationCircle, self).__init__(parent)
-
-        self.circle = QLabel(self)
-        self.circle.resize(20, 20)
-        self.circle.setStyleSheet("border: 3px solid blue; border-radius: 10px;")
 
 
 class UIEyeLocationCircle(QWidget):
@@ -62,7 +55,7 @@ class UICalibrate(QWidget):
         self.vbox.setAlignment(Qt.AlignCenter)
         self.setLayout(self.vbox)
 
-        self.currentPoint = UICalibrationCircle(self)
+        self.currentPoint = UICircle(self)
         self.currentPoint.hide()
 
         self.discardBtn = QPushButton('Discard', self)
@@ -95,13 +88,13 @@ class UICalibrate(QWidget):
             self.applySaveCalibration()
             # self.dots_on_screen = []
             # for dot in self.points_to_calibrate:
-            #     newDot = UICalibrationCircle(self)
+            #     newDot = UICircle(self)
             #     newDot.move(int(widthScreen * dot[0]), int(heightScreen * dot[1]))
             #     newDot.show()
             #     self.dots_on_screen.append(newDot)
             #     self.applySaveCalibration()
-                # self.discardBtn.show()
-                # self.saveApplyBtn.show()
+            # self.discardBtn.show()
+            # self.saveApplyBtn.show()
             return
 
         correctPoint = self.points_to_calibrate[self.currentIndex]
@@ -118,7 +111,7 @@ class UICalibrate(QWidget):
 
         self.dots_on_screen = []
         for dot in self.points_to_calibrate:
-            newDot = UICalibrationCircle(self)
+            newDot = UICircle(self)
             newDot.move(int(widthScreen * dot[0]), int(heightScreen * dot[1]))
             newDot.show()
             self.dots_on_screen.append(newDot)
@@ -143,12 +136,12 @@ class UICalibrate(QWidget):
 
             left_eye_circle = UIEyeLocationCircle(self)
             left_eye_circle.move(int(left_eye.position_on_display_area[0] * widthScreen),
-                             int(left_eye.position_on_display_area[1] * heightScreen))
+                                 int(left_eye.position_on_display_area[1] * heightScreen))
             left_eye_circle.show()
 
             right_eye_circle = UIEyeLocationCircle(self)
             right_eye_circle.move(int(right_eye.position_on_display_area[0] * widthScreen),
-                            int(right_eye.position_on_display_area[1] * heightScreen))
+                                  int(right_eye.position_on_display_area[1] * heightScreen))
             right_eye_circle.show()
 
             self.eye_position_on_screen.append(left_eye_circle)
@@ -162,6 +155,7 @@ class UICalibrate(QWidget):
         self.worker.calibration.leave_calibration_mode()
         self.worker.stop()
         w.startStartingMenu()
+
 
 class UIStartingMenu(QWidget):
     def __init__(self, parent=None):

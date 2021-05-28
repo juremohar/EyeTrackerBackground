@@ -88,11 +88,12 @@ class WindowsTrayUi(QMainWindow):
         print("done init")
 
     def start_tracking(self):
-        print("start tracking")
-        self.worker.start()
+        if not self.worker.isRunning():
+            self.worker.start()
+        else:
+            self.worker.tracker.start_tracking()
 
     def stop_tracking(self, location=None):
-        print("stop tracking")
         self.worker.stop(location)
 
     def application_quit(self):

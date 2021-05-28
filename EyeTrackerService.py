@@ -5,6 +5,8 @@ import time
 
 class EyeTracker:
     gazeData = None,
+    is_tracking = False
+    tracker = None
 
     def __init__(self):
         self.found_eyetrackers = tr.find_all_eyetrackers()
@@ -17,7 +19,6 @@ class EyeTracker:
         gaze_data["timestamp"] = time.time()
         self.gazeData = gaze_data
 
-
         # print("Left eye: ({gaze_left_eye}) \t Right eye: ({gaze_right_eye})".format(
         #     gaze_left_eye=gaze_data['left_gaze_point_on_display_area'],
         #     gaze_right_eye=gaze_data['right_gaze_point_on_display_area']))
@@ -27,6 +28,16 @@ class EyeTracker:
             print("error starting tracking - no device found")
             raise Exception("No eyetracker device found")
 
+        if self.is_tracking:
+            print("Tracking is already turned on - discarding data and resetting tracker")
+            self.stop_tracking()
+            self.gazeData = None
+
+        # if self.is_tracking:
+        #     print("error starting tracking - device is already tracking")
+        #     raise Exception("Device is already tracking")
+
+        self.is_tracking = True
         self.tracker.subscribe_to(tr.EYETRACKER_GAZE_DATA, self.gaze_data_callback, as_dictionary=True)
 
         print("starting tracking")
@@ -36,6 +47,11 @@ class EyeTracker:
             print("error stopping tracking - no device found")
             raise Exception("No eyetracker device found")
 
+        if not self.is_tracking:
+            print("Tracker is already shutdown")
+            raise Exception("Tracker is already shutdown")
+
+        self.is_tracking = False
         self.tracker.unsubscribe_from(tr.EYETRACKER_GAZE_DATA, self.gaze_data_callback)
 
     def get_data(self):
