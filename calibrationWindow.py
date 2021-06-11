@@ -7,8 +7,11 @@ from EyeTrackerService import *
 
 from UICircle import *
 
-widthScreen = 1920
-heightScreen = 1080
+
+from win32api import GetSystemMetrics
+
+widthScreen = GetSystemMetrics(0)
+heightScreen = GetSystemMetrics(1)
 
 
 class WorkerThread(QThread):
