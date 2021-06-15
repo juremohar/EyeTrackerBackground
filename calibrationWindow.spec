@@ -33,11 +33,11 @@ exe = EXE(pyz,
           a.zipfiles,
           a.datas,
           [('v', None, 'OPTION')],
-          name='calibrationWindow',
+          name='BackgroundEyeTrackerCalibration',
           debug=True,
           bootloader_ignore_signals=False,
           strip=False,
           upx=True,
           upx_exclude=[],
           runtime_tmpdir=None,
-          console=True )
+          console=False )

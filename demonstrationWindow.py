@@ -3,6 +3,8 @@ from PyQt5.QtCore import QTimer
 from PyQt5.QtWidgets import QApplication, QDialog, QVBoxLayout, QLabel
 import sys
 from PyQt5.QtGui import QPixmap
+import json
+
 
 from UICircle import *
 
@@ -22,7 +24,6 @@ class Window(QDialog):
 
         self.setFixedSize(monitor_width, monitor_height)
 
-        import json
 
         with open('09_06_2021_09_16_49.json') as f:
             self.savedData = json.load(f)
@@ -42,7 +43,7 @@ class Window(QDialog):
         self.show()
 
         self.timer = QTimer()
-        self.timer.setInterval(300)
+        self.timer.setInterval(500)
         self.timer.timeout.connect(self.movePoint)
         self.timer.start()
 

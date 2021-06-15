@@ -3,11 +3,12 @@ EyeTrackerBackground
 
 To build EyeTrackerBackground
 - pyinstaller main.spec
-
+- pyinstaller --onefile --noconsole main.spec
 
 
 To build EyeTrackerCalibration
 - pyinstaller calibrationWindow.spec
+- pyinstaller --onefile --noconsole calibrationWindow.spec
 
 
 For other project to use this app this is possible by python libraray called rpyc.
