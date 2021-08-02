@@ -10,6 +10,8 @@ from UICircle import *
 
 from win32api import GetSystemMetrics
 
+import json
+
 widthScreen = GetSystemMetrics(0)
 heightScreen = GetSystemMetrics(1)
 
@@ -104,6 +106,7 @@ class UICalibrate(QWidget):
     def applySaveCalibration(self):
 
         self.dots_on_screen = []
+
         for dot in self.points_to_calibrate:
             newDot = UICircle(self)
             newDot.move(int(widthScreen * dot[0]), int(heightScreen * dot[1]))
@@ -118,6 +121,8 @@ class UICalibrate(QWidget):
         print("Compute and apply returned {0} and collected at {1} points.".format(calibration_result.status, len(
             calibration_result.calibration_points)))
 
+        # calibration_avg = []
+
         for point in calibration_result.calibration_points:
             pos_display_area = point.position_on_display_area
             eyes_position = point.calibration_samples[0]
@@ -125,8 +130,8 @@ class UICalibrate(QWidget):
             left_eye = eyes_position.left_eye
             right_eye = eyes_position.right_eye
 
-            print(left_eye.position_on_display_area[0], left_eye.position_on_display_area[1])
-            print(right_eye.position_on_display_area)
+            # print(left_eye.position_on_display_area[0], left_eye.position_on_display_area[1])
+            # print(right_eye.position_on_display_area)
 
             left_eye_circle = UIEyeLocationCircle(self)
             left_eye_circle.move(int(left_eye.position_on_display_area[0] * widthScreen),
@@ -138,8 +143,20 @@ class UICalibrate(QWidget):
                                   int(right_eye.position_on_display_area[1] * heightScreen))
             right_eye_circle.show()
 
+            # tmp = {
+            #     "pos": pos_display_area,
+            #     "left": (left_eye.position_on_display_area[0], left_eye.position_on_display_area[1]),
+            #     "right": (right_eye.position_on_display_area[0], right_eye.position_on_display_area[1])
+            # }
+
+            # calibration_avg.append(tmp)
+
             self.eye_position_on_screen.append(left_eye_circle)
             self.eye_position_on_screen.append(right_eye_circle)
+
+        # location = "C://diplomska_kalibracija_rezultati//result_" + time.strftime('%d_%m_%Y_%H_%M_%S') + ".json"
+        # with open(location, 'w') as fp:
+        #     json.dump(calibration_avg, fp)
 
         # self.worker.calibration.leave_calibration_mode()
         # self.worker.stop()

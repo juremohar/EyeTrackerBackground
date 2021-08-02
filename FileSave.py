@@ -26,3 +26,6 @@ class FileSave:
             json.dump(self.data_collection, fp)
 
         print("saved - " + str(len(self.data_collection)))
+
+        self.data_collection.clear()
+
